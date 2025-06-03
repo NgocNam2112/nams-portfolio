@@ -231,7 +231,7 @@ export default function Hero() {
                           <p
                             className={`bg-gradient-to-r ${currentTheme.colors.secondary} bg-clip-text text-transparent font-medium theme-transition-colors`}
                           >
-                            Full-Stack Web Developer
+                            Web Developer
                           </p>
                           <p
                             className={`text-sm mt-1 theme-transition-text ${currentTheme.id === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}

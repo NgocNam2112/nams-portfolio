@@ -1,10 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useTheme } from '@/contexts/ThemeContext';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
 import Link from 'next/link';
+import { ContactFormData, contactSchema } from '@/types/ContactFormType';
+
+// Form validation schema
 
 export default function Contact() {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
@@ -12,41 +19,40 @@ export default function Contact() {
   const { ref: infoRef, isVisible: infoVisible } = useScrollAnimation();
   const { currentTheme } = useTheme();
 
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
   });
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const onSubmit = async (data: ContactFormData) => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Form submitted:', data);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission here
-    // Reset form
-    setFormData({
-      name: '',
-      email: '',
-      message: '',
-    });
+      // Reset form after successful submission
+      reset();
+
+      // You can add success notification here
+      alert('Message sent successfully!');
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Error sending message. Please try again.');
+    }
   };
 
   const getFocusRingColor = () => {
     const themeColors = {
-      purple: 'focus:ring-purple-500',
-      blue: 'focus:ring-blue-500',
-      emerald: 'focus:ring-emerald-500',
-      orange: 'focus:ring-orange-500',
-      rose: 'focus:ring-rose-500',
-      dark: 'focus:ring-gray-500',
+      purple: 'focus-visible:ring-purple-500',
+      blue: 'focus-visible:ring-blue-500',
+      emerald: 'focus-visible:ring-emerald-500',
+      orange: 'focus-visible:ring-orange-500',
+      rose: 'focus-visible:ring-rose-500',
+      dark: 'focus-visible:ring-gray-500',
     };
     return (
       themeColors[currentTheme.id as keyof typeof themeColors] ||
@@ -55,10 +61,26 @@ export default function Contact() {
   };
 
   const socialLinks = [
-    { name: 'GitHub', icon: '/github.png', url: 'https://github.com' },
-    { name: 'LinkedIn', icon: '/linkedin.png', url: 'https://linkedin.com' },
-    { name: 'YouTube', icon: '/youtube.png', url: 'https://youtube.com' },
-    { name: 'Email', icon: '/email.png', url: 'mailto:hello@example.com' },
+    {
+      name: 'GitHub',
+      icon: '/github.png',
+      url: process.env.NEXT_PUBLIC_GITHUB_URL,
+    },
+    {
+      name: 'LinkedIn',
+      icon: '/linkedin.png',
+      url: process.env.NEXT_PUBLIC_LINKEDIN_URL,
+    },
+    {
+      name: 'YouTube',
+      icon: '/youtube.png',
+      url: process.env.NEXT_PUBLIC_YOUTUBE_URL,
+    },
+    {
+      name: 'Email',
+      icon: '/email.png',
+      url: process.env.NEXT_PUBLIC_EMAIL_URL,
+    },
   ];
 
   return (
@@ -100,7 +122,7 @@ export default function Contact() {
             <h3 className="text-2xl font-semibold text-white mb-6 theme-transition-text">
               Send a Message
             </h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div
                 className={`transition-all duration-500 ${
                   formVisible
@@ -114,16 +136,22 @@ export default function Contact() {
                 >
                   Your Name
                 </label>
-                <input
-                  type="text"
+                <Input
                   id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${getFocusRingColor()} focus:border-transparent input-focus theme-transition-colors theme-transition-border`}
+                  type="text"
                   placeholder="John Doe"
+                  {...register('name')}
+                  className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 ${getFocusRingColor()} focus-visible:border-transparent input-focus theme-transition-colors theme-transition-border ${
+                    errors.name
+                      ? 'border-red-500 focus-visible:ring-red-500'
+                      : ''
+                  }`}
                 />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-400">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
 
               <div
@@ -139,16 +167,22 @@ export default function Contact() {
                 >
                   Email Address
                 </label>
-                <input
-                  type="email"
+                <Input
                   id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${getFocusRingColor()} focus:border-transparent input-focus theme-transition-colors theme-transition-border`}
+                  type="email"
                   placeholder="john@example.com"
+                  {...register('email')}
+                  className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 ${getFocusRingColor()} focus-visible:border-transparent input-focus theme-transition-colors theme-transition-border ${
+                    errors.email
+                      ? 'border-red-500 focus-visible:ring-red-500'
+                      : ''
+                  }`}
                 />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-400">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
               <div
@@ -164,28 +198,35 @@ export default function Contact() {
                 >
                   Message
                 </label>
-                <textarea
+                <Textarea
                   id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  required
                   rows={5}
-                  className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${getFocusRingColor()} focus:border-transparent resize-none textarea-focus theme-transition-colors theme-transition-border`}
                   placeholder="Tell me about your project or just say hello!"
+                  {...register('message')}
+                  className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 ${getFocusRingColor()} focus-visible:border-transparent resize-none textarea-focus theme-transition-colors theme-transition-border ${
+                    errors.message
+                      ? 'border-red-500 focus-visible:ring-red-500'
+                      : ''
+                  }`}
                 />
+                {errors.message && (
+                  <p className="mt-1 text-sm text-red-400">
+                    {errors.message.message}
+                  </p>
+                )}
               </div>
 
-              <button
+              <Button
                 type="submit"
-                className={`w-full bg-gradient-to-r ${currentTheme.colors.primary} hover:shadow-xl text-white py-3 px-6 rounded-lg font-semibold button-hover shadow-lg theme-transition-colors ${
+                disabled={isSubmitting}
+                className={`w-full bg-gradient-to-r ${currentTheme.colors.primary} hover:shadow-xl text-white py-3 px-6 rounded-lg font-semibold button-hover shadow-lg theme-transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                   formVisible
                     ? 'animate-fade-in-up animate-stagger-4'
                     : 'opacity-0'
                 }`}
               >
-                Send Message
-              </button>
+                {isSubmitting ? 'Sending...' : 'Send Message'}
+              </Button>
             </form>
           </div>
 
@@ -242,7 +283,7 @@ export default function Contact() {
                 {socialLinks.map((link, index) => (
                   <Link
                     key={index}
-                    href={link.url}
+                    href={link.url || ''}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`p-3 bg-white/10 hover:bg-white/20 rounded-lg scale-hover-md hover:shadow-lg group theme-transition-colors ${
