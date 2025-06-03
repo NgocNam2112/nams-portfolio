@@ -45,6 +45,10 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Global CSS variables set by the theme system */
+  --transition-duration: 300ms;
+  --animation-duration: 1000ms;
 }
 
 /* Theme-specific scrollbar colors */
@@ -97,30 +101,53 @@
   transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Global configuration classes */
+.no-animations * {
+  animation: none !important;
+  transition: none !important;
+}
+
+.no-animations *::before,
+.no-animations *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* Theme-aware transition durations */
 .theme-transition-colors {
-  transition:
-    color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.theme-transition-bg {
-  transition:
-    background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-    background-image 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.theme-transition-text {
-  transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property:
+    color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: var(--transition-duration, 300ms);
 }
 
 .theme-transition-border {
-  transition: border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: var(--transition-duration, 300ms);
 }
 
-.theme-transition-shadow {
-  transition: box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+.theme-transition-bg {
+  transition-property: background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: var(--transition-duration, 300ms);
+}
+
+.theme-transition-text {
+  transition-property: color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: var(--transition-duration, 300ms);
 }
 
 /* Custom animations */

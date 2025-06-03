@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useState, useEffect } from 'react';
+import { useTheme, defaultThemes } from '@/stores/themeStore';
 import {
   Popover,
   PopoverContent,
@@ -14,6 +14,16 @@ import { Badge } from '@/components/ui/badge';
 export default function ThemeSwitcher() {
   const [open, setOpen] = useState(false);
   const { currentTheme, setTheme, themes } = useTheme();
+
+  // Use defaultThemes as fallback if themes array is empty
+  const availableThemes = themes && themes.length > 0 ? themes : defaultThemes;
+
+  useEffect(() => {
+    console.log('ThemeSwitcher Debug:');
+    console.log('- Available themes:', availableThemes);
+    console.log('- Current theme:', currentTheme);
+    console.log('- Themes from store:', themes);
+  }, [availableThemes, currentTheme, themes]);
 
   // Define icons for each theme
   const getThemeIcon = (themeId: string) => {
@@ -29,7 +39,7 @@ export default function ThemeSwitcher() {
   };
 
   const getThemeGradient = (themeId: string) => {
-    const theme = themes.find(t => t.id === themeId);
+    const theme = availableThemes.find(t => t.id === themeId);
     return theme?.colors.primary || 'from-purple-600 to-pink-600';
   };
 
@@ -72,7 +82,7 @@ export default function ThemeSwitcher() {
             </CardHeader>
 
             <CardContent className="grid grid-cols-2 gap-3">
-              {themes.map((theme, index) => (
+              {availableThemes.map((theme, index) => (
                 <Button
                   key={theme.id}
                   onClick={() => handleThemeSelect(theme.id)}

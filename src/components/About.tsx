@@ -1,7 +1,7 @@
 'use client';
 
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from '@/stores/themeStore';
 
 export default function About() {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
