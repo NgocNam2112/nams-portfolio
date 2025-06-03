@@ -42,7 +42,7 @@ export default function Home() {
                 <h1 className="text-5xl md:text-7xl font-bold mb-6">
                   Nam Nguyen
                 </h1>
-                <p className="text-xl">Full-Stack Developer</p>
+                <p className="text-xl">Web Developer</p>
               </div>
             </section>
           }

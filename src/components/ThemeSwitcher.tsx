@@ -2,9 +2,17 @@
 
 import { useState } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export default function ThemeSwitcher() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const { currentTheme, setTheme, themes } = useTheme();
 
   // Define icons for each theme
@@ -20,101 +28,82 @@ export default function ThemeSwitcher() {
     return themeIcons[themeId as keyof typeof themeIcons] || '🎨';
   };
 
-  const getIconColorClass = (themeId: string) => {
-    const colorClasses = {
-      purple: 'text-purple-500',
-      blue: 'text-blue-500',
-      emerald: 'text-emerald-500',
-      orange: 'text-orange-500',
-      rose: 'text-rose-500',
-      dark: 'text-gray-500',
-    };
-    return (
-      colorClasses[themeId as keyof typeof colorClasses] || 'text-purple-500'
-    );
+  const getThemeGradient = (themeId: string) => {
+    const theme = themes.find(t => t.id === themeId);
+    return theme?.colors.primary || 'from-purple-600 to-pink-600';
   };
 
-  const getIconBackgroundClass = (themeId: string) => {
-    const backgroundClasses = {
-      purple: 'bg-purple-50 border-purple-200',
-      blue: 'bg-blue-50 border-blue-200',
-      emerald: 'bg-emerald-50 border-emerald-200',
-      orange: 'bg-orange-50 border-orange-200',
-      rose: 'bg-rose-50 border-rose-200',
-      dark: 'bg-gray-100 border-gray-300',
-    };
-    return (
-      backgroundClasses[themeId as keyof typeof backgroundClasses] ||
-      'bg-purple-50 border-purple-200'
-    );
-  };
-
-  const getActiveBackgroundClass = (themeId: string) => {
-    const activeClasses = {
-      purple: 'bg-purple-100 border-purple-400',
-      blue: 'bg-blue-100 border-blue-400',
-      emerald: 'bg-emerald-100 border-emerald-400',
-      orange: 'bg-orange-100 border-orange-400',
-      rose: 'bg-rose-100 border-rose-400',
-      dark: 'bg-gray-200 border-gray-500',
-    };
-    return (
-      activeClasses[themeId as keyof typeof activeClasses] ||
-      'bg-purple-100 border-purple-400'
-    );
+  const handleThemeSelect = (themeId: string) => {
+    setTheme(themeId);
+    setOpen(false);
   };
 
   return (
-    <div className="fixed bottom-6 right-8 z-50 w-96 h-[425px]">
-      {/* Theme Palette - Conditional rendering with animation */}
-      {isOpen && (
-        <div className="mb-4 bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-2xl border border-gray-200 theme-transition-colors theme-transition-border scale-hover-sm animate-slide-in-right absolute w-full">
-          <div className="text-sm font-semibold text-gray-700 mb-3 theme-transition-text">
-            Choose Theme
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            {themes.map((theme, index) => (
-              <button
-                key={theme.id}
-                onClick={() => {
-                  setTheme(theme.id);
-                  setIsOpen(false);
-                }}
-                className={`p-3 rounded-xl border-2 scale-hover-md theme-transition-colors theme-transition-border animate-fade-in-up ${
-                  currentTheme.id === theme.id
-                    ? `${getActiveBackgroundClass(theme.id)} shadow-lg`
-                    : `${getIconBackgroundClass(theme.id)} hover:shadow-md`
-                }`}
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                }}
-              >
-                <div className="flex flex-col items-center gap-2">
-                  <div
-                    className={`text-3xl ${getIconColorClass(theme.id)} theme-transition-colors`}
-                  >
-                    {getThemeIcon(theme.id)}
-                  </div>
-                  <span className="text-xs font-medium text-gray-700 theme-transition-text">
-                    {theme.name}
-                  </span>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+    <div className="fixed bottom-6 right-8 z-40">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            size="lg"
+            className={`h-14 w-14 rounded-full bg-gradient-to-r ${currentTheme.colors.primary} hover:shadow-xl scale-hover-lg text-white border-0 shadow-lg`}
+            aria-label="Change theme"
+          >
+            <div className="text-2xl icon-rotate">
+              {getThemeIcon(currentTheme.id)}
+            </div>
+          </Button>
+        </PopoverTrigger>
 
-      {/* Toggle Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`absolute right-0 bottom-0 w-14 h-14 rounded-full bg-gradient-to-r ${currentTheme.colors.primary} shadow-lg hover:shadow-xl scale-hover-lg flex items-center justify-center group theme-transition-colors`}
-        aria-label="Change theme"
-      >
-        <div key={currentTheme.id} className="text-2xl icon-rotate">
-          {getThemeIcon(currentTheme.id)}
-        </div>
-      </button>
+        <PopoverContent
+          className={`w-80 p-0 theme-transition-colors theme-transition-border ${currentTheme.colors.projects} ${
+            currentTheme.id === 'dark' ? 'border-gray-700' : 'border-gray-200'
+          }`}
+          side="left"
+          align="end"
+        >
+          <Card className="border-0 shadow-none bg-transparent">
+            <CardHeader className="pb-3">
+              <CardTitle
+                className={`text-lg font-semibold theme-transition-text ${
+                  currentTheme.id === 'dark' ? 'text-white' : 'text-gray-900'
+                }`}
+              >
+                Choose Theme
+              </CardTitle>
+            </CardHeader>
+
+            <CardContent className="grid grid-cols-2 gap-3">
+              {themes.map((theme, index) => (
+                <Button
+                  key={theme.id}
+                  onClick={() => handleThemeSelect(theme.id)}
+                  variant={currentTheme.id === theme.id ? 'default' : 'outline'}
+                  className={`h-auto p-4 flex-col gap-2 scale-hover-sm theme-transition-colors theme-transition-border ${
+                    currentTheme.id === theme.id
+                      ? `bg-gradient-to-r ${getThemeGradient(theme.id)} text-white border-0 shadow-md`
+                      : `${currentTheme.id === 'dark' ? 'border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white' : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`
+                  }`}
+                  style={{
+                    animationDelay: `${index * 50}ms`,
+                  }}
+                >
+                  <div className="text-2xl">{getThemeIcon(theme.id)}</div>
+                  <div className="text-xs font-medium text-center">
+                    {theme.name}
+                  </div>
+                  {currentTheme.id === theme.id && (
+                    <Badge
+                      variant="secondary"
+                      className="text-xs bg-white/20 text-white border-0 mt-1"
+                    >
+                      Active
+                    </Badge>
+                  )}
+                </Button>
+              ))}
+            </CardContent>
+          </Card>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }

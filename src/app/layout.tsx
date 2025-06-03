@@ -15,8 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Nam Nguyen - Portfolio',
-  description:
-    'Full-stack developer portfolio showcasing modern web applications',
+  description: 'Web developer portfolio showcasing modern web applications',
 };
 
 export default function RootLayout({

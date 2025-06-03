@@ -3,6 +3,13 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useTheme } from '@/contexts/ThemeContext';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTrigger,
+  DrawerTitle,
+} from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -18,28 +25,39 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: 'smooth' });
-    setIsMobileMenuOpen(false);
+    closeMobileMenu();
   };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setIsMobileMenuOpen(false);
+    closeMobileMenu();
   };
 
   const navItems = [
-    { name: 'Home', id: 'home', action: scrollToTop },
-    { name: 'About', id: 'about', action: () => scrollToSection('about') },
+    { name: 'Home', id: 'home', label: 'Back to top', action: scrollToTop },
+    {
+      name: 'About',
+      id: 'about',
+      label: 'Learn about me',
+      action: () => scrollToSection('about'),
+    },
     {
       name: 'Projects',
       id: 'projects',
+      label: 'View my work',
       action: () => scrollToSection('projects'),
     },
     {
       name: 'Contact',
       id: 'contact',
+      label: 'Get in touch',
       action: () => scrollToSection('contact'),
     },
   ];
@@ -129,7 +147,7 @@ export default function Navigation() {
                 className={`w-10 h-10 rounded-full overflow-hidden border-2 scale-hover-md shadow-lg theme-transition-border ${getAvatarBorderColor()}`}
               >
                 <Image
-                  src="/avatar.svg"
+                  src="/avatar.jpg"
                   alt="Nam Nguyen"
                   width={40}
                   height={40}
@@ -163,59 +181,169 @@ export default function Navigation() {
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`md:hidden scale-hover-md theme-transition-text ${getTextColor()}`}
-            aria-label="Toggle mobile menu"
+          {/* Mobile Menu using Drawer from Top */}
+          <Drawer
+            open={isMobileMenuOpen}
+            onOpenChange={setIsMobileMenuOpen}
+            direction="top"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {isMobileMenuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
-        </div>
+            <DrawerTrigger asChild>
+              <button
+                className={`md:hidden scale-hover-md theme-transition-text ${getTextColor()} p-2 rounded-lg relative z-50`}
+                aria-label="Toggle mobile menu"
+              >
+                <div className="w-6 h-6 relative">
+                  {/* Top line */}
+                  <span
+                    className={`absolute block h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
+                      isMobileMenuOpen
+                        ? 'rotate-45 translate-y-2.5'
+                        : 'translate-y-0'
+                    }`}
+                  />
+                  {/* Middle line */}
+                  <span
+                    className={`absolute block h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out translate-y-2 ${
+                      isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
+                    }`}
+                  />
+                  {/* Bottom line */}
+                  <span
+                    className={`absolute block h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
+                      isMobileMenuOpen
+                        ? '-rotate-45 translate-y-2.5'
+                        : 'translate-y-4'
+                    }`}
+                  />
+                </div>
+              </button>
+            </DrawerTrigger>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div
-            className={`md:hidden border-t transition-all duration-300 theme-transition-border theme-transition-colors ${
-              currentTheme.id === 'dark'
-                ? 'border-gray-700 bg-gray-900/95'
-                : 'border-gray-200 bg-white/95'
-            } backdrop-blur-sm`}
-          >
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {navItems.map(item => (
-                <button
-                  key={item.id}
-                  onClick={item.action}
-                  className={`block w-full text-left px-3 py-2 rounded-md scale-hover-md theme-transition-text theme-transition-colors ${getTextColor()} ${getHoverTextColor()} hover:bg-gray-100/10`}
-                >
-                  {item.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+            <DrawerContent
+              className={`theme-transition-colors theme-transition-border ${currentTheme.colors.projects} ${
+                currentTheme.id === 'dark'
+                  ? 'border-gray-700'
+                  : 'border-gray-200'
+              } md:hidden rounded-b-2xl shadow-2xl`}
+            >
+              {/* Add DrawerTitle for accessibility */}
+              <DrawerTitle className="sr-only">Navigation Menu</DrawerTitle>
+
+              {/* Welcome Header */}
+              <div
+                className={`px-6 py-4 border-b theme-transition-border ${
+                  currentTheme.id === 'dark'
+                    ? 'border-gray-700'
+                    : 'border-gray-200'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div
+                      className={`w-12 h-12 rounded-full overflow-hidden border-2 theme-transition-border ${
+                        currentTheme.id === 'dark'
+                          ? 'border-gray-600'
+                          : 'border-gray-300'
+                      }`}
+                    >
+                      <Image
+                        src="/avatar.jpg"
+                        alt="Nam Nguyen"
+                        width={48}
+                        height={48}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div
+                      className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-gradient-to-r ${currentTheme.colors.primary} border-2 ${
+                        currentTheme.id === 'dark'
+                          ? 'border-gray-800'
+                          : 'border-white'
+                      }`}
+                    ></div>
+                  </div>
+                  <div>
+                    <h3
+                      className={`font-semibold text-lg ${
+                        currentTheme.id === 'dark'
+                          ? 'text-white'
+                          : 'text-gray-900'
+                      }`}
+                    >
+                      Hey there!
+                    </h3>
+                    <p
+                      className={`text-sm ${
+                        currentTheme.id === 'dark'
+                          ? 'text-gray-400'
+                          : 'text-gray-600'
+                      }`}
+                    >
+                      Where would you like to go?
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 space-y-3">
+                {navItems.map(item => {
+                  return (
+                    <Button
+                      key={item.id}
+                      onClick={item.action}
+                      variant="ghost"
+                      className={`w-full justify-start text-left h-auto p-4 font-medium scale-hover-sm theme-transition-colors rounded-xl group ${
+                        currentTheme.id === 'dark'
+                          ? 'text-white hover:bg-gray-800/60 hover:text-white'
+                          : 'text-gray-900 hover:bg-gray-100/60 hover:text-gray-900'
+                      } border border-transparent hover:border-current/10`}
+                    >
+                      <div className="flex items-center gap-4 w-full">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 group-hover:scale-110 transition-transform duration-200">
+                          <div
+                            className={`w-3 h-3 rounded-full bg-gradient-to-r ${currentTheme.colors.primary} theme-transition-colors`}
+                          ></div>
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-base font-medium">
+                            {item.name}
+                          </div>
+                          <div
+                            className={`text-xs ${
+                              currentTheme.id === 'dark'
+                                ? 'text-gray-500'
+                                : 'text-gray-500'
+                            }`}
+                          >
+                            {item.label}
+                          </div>
+                        </div>
+                        <div
+                          className={`w-2 h-2 rounded-full bg-gradient-to-r ${currentTheme.colors.primary} theme-transition-colors opacity-60 group-hover:opacity-100 group-hover:scale-125 transition-all duration-200`}
+                        ></div>
+                      </div>
+                    </Button>
+                  );
+                })}
+
+                {/* Enhanced Close button */}
+                <div className="pt-6 mt-6 border-t theme-transition-border border-gray-200 dark:border-gray-700">
+                  <Button
+                    onClick={closeMobileMenu}
+                    variant="outline"
+                    className={`w-full font-medium theme-transition-colors theme-transition-border rounded-xl h-12 ${
+                      currentTheme.id === 'dark'
+                        ? 'border-gray-600 text-gray-300 hover:bg-gray-800/50 hover:text-white hover:border-gray-500'
+                        : 'border-gray-300 text-gray-700 hover:bg-gray-100/50 hover:text-gray-900 hover:border-gray-400'
+                    } scale-hover-sm`}
+                  >
+                    Close Menu
+                  </Button>
+                </div>
+              </div>
+            </DrawerContent>
+          </Drawer>
+        </div>
       </div>
     </nav>
   );

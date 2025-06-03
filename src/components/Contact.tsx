@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useTheme } from '@/contexts/ThemeContext';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Contact() {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
@@ -29,7 +31,6 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle form submission here
-    console.log('Form submitted:', formData);
     // Reset form
     setFormData({
       name: '',
@@ -54,10 +55,10 @@ export default function Contact() {
   };
 
   const socialLinks = [
-    { name: 'GitHub', icon: '🐙', url: 'https://github.com' },
-    { name: 'LinkedIn', icon: '💼', url: 'https://linkedin.com' },
-    { name: 'Twitter', icon: '🐦', url: 'https://twitter.com' },
-    { name: 'Email', icon: '📧', url: 'mailto:hello@example.com' },
+    { name: 'GitHub', icon: '/github.png', url: 'https://github.com' },
+    { name: 'LinkedIn', icon: '/linkedin.png', url: 'https://linkedin.com' },
+    { name: 'YouTube', icon: '/youtube.png', url: 'https://youtube.com' },
+    { name: 'Email', icon: '/email.png', url: 'mailto:hello@example.com' },
   ];
 
   return (
@@ -239,23 +240,30 @@ export default function Contact() {
               </h3>
               <div className="grid grid-cols-2 gap-4">
                 {socialLinks.map((link, index) => (
-                  <a
+                  <Link
                     key={index}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`flex items-center gap-3 p-3 bg-white/10 hover:bg-white/20 rounded-lg scale-hover-md hover:shadow-lg group theme-transition-colors ${
+                    className={`p-3 bg-white/10 hover:bg-white/20 rounded-lg scale-hover-md hover:shadow-lg group theme-transition-colors ${
                       infoVisible ? 'animate-scale-in' : 'opacity-0 scale-95'
                     }`}
                     style={{ animationDelay: `${0.4 + index * 0.1}s` }}
                   >
-                    <span className="text-2xl icon-scale icon-hover theme-transition">
-                      {link.icon}
-                    </span>
-                    <span className="text-gray-300 font-medium group-hover:text-white theme-transition-text">
-                      {link.name}
-                    </span>
-                  </a>
+                    <div className="flex items-center gap-3 w-full h-full">
+                      <div className="relative w-6 h-6">
+                        <Image
+                          src={link.icon}
+                          alt={link.name}
+                          fill
+                          className="icon-scale icon-hover theme-transition object-cover"
+                        />
+                      </div>
+                      <span className="text-gray-300 font-medium group-hover:text-white theme-transition-text">
+                        {link.name}
+                      </span>
+                    </div>
+                  </Link>
                 ))}
               </div>
             </div>
