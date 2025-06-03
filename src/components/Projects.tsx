@@ -2,12 +2,18 @@
 
 import { useTheme } from '@/contexts/ThemeContext';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { useRef } from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 export default function Projects() {
   const { currentTheme } = useTheme();
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
   const { ref: projectsRef, isVisible: projectsVisible } = useScrollAnimation();
   const { ref: ctaRef, isVisible: ctaVisible } = useScrollAnimation();
+
+  const sliderRef = useRef<Slider>(null);
 
   const getButtonHoverClasses = (variant: 'primary' | 'secondary') => {
     const themeMap = {
@@ -122,6 +128,28 @@ export default function Projects() {
       icon: '🌤️',
       category: 'API Integration',
     },
+    {
+      title: 'Social Media Dashboard',
+      description:
+        'A comprehensive social media management platform with analytics, scheduling, and multi-platform integration. Features content calendar, engagement metrics, and automated posting.',
+      technologies: ['React', 'Node.js', 'GraphQL', 'Redis', 'Chart.js'],
+      demo: 'https://example.com',
+      github: 'https://github.com/example',
+      status: 'Live',
+      icon: '📱',
+      category: 'Dashboard',
+    },
+    {
+      title: 'AI Chat Assistant',
+      description:
+        'An intelligent chat assistant powered by machine learning with natural language processing, context awareness, and multi-language support. Integrates with various APIs and databases.',
+      technologies: ['Python', 'FastAPI', 'OpenAI', 'PostgreSQL', 'Docker'],
+      demo: 'https://example.com',
+      github: 'https://github.com/example',
+      status: 'In Development',
+      icon: '🤖',
+      category: 'AI/ML',
+    },
   ];
 
   const getStatusBadgeClasses = (status: string) => {
@@ -143,6 +171,84 @@ export default function Projects() {
 
     const themeKey = currentTheme.id as keyof typeof themeMap;
     return themeMap[themeKey] || themeMap.purple;
+  };
+
+  // Custom Arrow Components
+  const CustomPrevArrow = (props: { onClick?: () => void }) => {
+    const { onClick } = props;
+    return (
+      <button
+        onClick={onClick}
+        className={`absolute left-4 top-1/2 transform -translate-y-1/2 z-10 p-4 rounded-full ${getCardBackground()} shadow-lg hover:shadow-xl scale-hover-md theme-transition-colors transition-all duration-300 group ${
+          currentTheme.id === 'dark'
+            ? 'border border-gray-700'
+            : 'border border-gray-200'
+        }`}
+      >
+        <svg
+          className={`w-6 h-6 ${getTextColor()} theme-transition-text group-hover:scale-110 transition-transform duration-300`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+    );
+  };
+
+  const CustomNextArrow = (props: { onClick?: () => void }) => {
+    const { onClick } = props;
+    return (
+      <button
+        onClick={onClick}
+        className={`absolute right-4 top-1/2 transform -translate-y-1/2 z-10 p-4 rounded-full ${getCardBackground()} shadow-lg hover:shadow-xl scale-hover-md theme-transition-colors transition-all duration-300 group ${
+          currentTheme.id === 'dark'
+            ? 'border border-gray-700'
+            : 'border border-gray-200'
+        }`}
+      >
+        <svg
+          className={`w-6 h-6 ${getTextColor()} theme-transition-text group-hover:scale-110 transition-transform duration-300`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+    );
+  };
+
+  // Slider settings
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    pauseOnHover: true,
+    pauseOnFocus: true,
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
+    customPaging: () => (
+      <button
+        className={`w-4 h-4 rounded-full transition-all duration-300 ${`bg-gradient-to-r ${currentTheme.colors.primary} shadow-lg`} theme-transition-colors hover:scale-110`}
+      />
+    ),
+    dotsClass: 'slick-dots custom-dots',
   };
 
   return (
@@ -176,123 +282,180 @@ export default function Projects() {
           </p>
         </div>
 
-        {/* Projects Grid */}
-        <div
-          ref={projectsRef}
-          className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
-        >
-          {projects.map((project, index) => (
-            <div
-              key={project.title}
-              className={`group ${getCardBackground()} rounded-2xl shadow-lg hover:shadow-2xl scale-hover-sm overflow-hidden border border-gray-100 theme-transition-colors theme-transition-border transition-all duration-700 ${
-                currentTheme.id === 'dark' ? 'border-gray-700' : ''
-              } ${projectsVisible ? 'animate-scale-in' : 'opacity-0 scale-95'}`}
-              style={{ animationDelay: `${index * 0.2}s` }}
-            >
-              {/* Card Header */}
-              <div
-                className={`bg-gradient-to-br ${currentTheme.colors.primary} p-6 relative overflow-hidden theme-transition-bg`}
-              >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full transform translate-x-16 -translate-y-16 theme-transition-colors"></div>
-                <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full transform -translate-x-10 translate-y-10 theme-transition-colors"></div>
+        {/* Projects Carousel */}
+        <div ref={projectsRef} className="max-w-6xl mx-auto relative">
+          <style jsx global>{`
+            .slick-dots {
+              bottom: -60px !important;
+            }
+            .slick-dots li {
+              margin: 0 6px !important;
+            }
+            .slick-dots li button:before {
+              display: none !important;
+            }
+            .slick-dots li.slick-active button {
+              transform: scale(1.25) !important;
+            }
+            .custom-dots li button {
+              width: 16px !important;
+              height: 16px !important;
+              border-radius: 50% !important;
+              transition: all 0.3s ease !important;
+            }
+            .custom-dots li:not(.slick-active) button {
+              background: ${currentTheme.id === 'dark'
+                ? '#4B5563'
+                : '#D1D5DB'} !important;
+              transform: scale(1) !important;
+            }
+            .slick-slide > div {
+              padding: 0 12px;
+            }
+          `}</style>
 
-                <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-4xl">{project.icon}</span>
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeClasses(project.status)} theme-transition-colors theme-transition-border`}
-                    >
-                      {project.status}
-                    </span>
-                  </div>
-
-                  <h3 className="text-2xl font-bold text-white mb-2 theme-transition-text">
-                    {project.title}
-                  </h3>
-
-                  <span
-                    className={`text-sm font-medium ${getCategoryColor()} bg-white/20 px-3 py-1 rounded-full theme-transition-colors theme-transition-text`}
-                  >
-                    {project.category}
-                  </span>
-                </div>
-              </div>
-
-              {/* Card Content */}
-              <div className="p-6">
-                <p
-                  className={`${getSecondaryTextColor()} text-sm leading-relaxed mb-6 line-clamp-4 theme-transition-text transition-all duration-500 ${
-                    projectsVisible
-                      ? 'animate-fade-in-up animate-stagger-1'
-                      : 'opacity-0'
-                  }`}
-                  style={{ animationDelay: `${index * 0.2 + 0.1}s` }}
-                >
-                  {project.description}
-                </p>
-
-                {/* Technologies */}
-                <div className="mb-6">
-                  <h4
-                    className={`text-sm font-semibold ${getTextColor()} mb-3 theme-transition-text transition-all duration-500 ${
-                      projectsVisible
-                        ? 'animate-fade-in-up animate-stagger-2'
-                        : 'opacity-0'
-                    }`}
-                    style={{ animationDelay: `${index * 0.2 + 0.2}s` }}
-                  >
-                    Technologies Used
-                  </h4>
-                  <div className="flex flex-wrap gap-2">
-                    {project.technologies.map((tech, techIndex) => (
-                      <span
-                        key={tech}
-                        className={`px-3 py-1 rounded-lg text-xs font-medium ${getTechTagClasses()} scale-hover-md hover:shadow-sm theme-transition-colors theme-transition-border transition-all duration-300 ${
-                          projectsVisible
-                            ? 'animate-scale-in'
-                            : 'opacity-0 scale-95'
-                        }`}
-                        style={{
-                          animationDelay: `${index * 0.2 + 0.3 + techIndex * 0.05}s`,
-                        }}
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
+          <Slider ref={sliderRef} {...sliderSettings}>
+            {projects.map((project, index) => (
+              <div key={project.title}>
                 <div
-                  className={`flex gap-3 transition-all duration-500 ${
-                    projectsVisible
-                      ? 'animate-fade-in-up animate-stagger-3'
-                      : 'opacity-0'
-                  }`}
-                  style={{
-                    animationDelay: `${index * 0.2 + 0.4}s`,
-                  }}
+                  className={`${getCardBackground()} rounded-2xl shadow-2xl overflow-hidden border theme-transition-colors theme-transition-border ${
+                    currentTheme.id === 'dark'
+                      ? 'border-gray-700'
+                      : 'border-gray-100'
+                  } ${projectsVisible ? 'animate-scale-in' : 'opacity-0 scale-95'}`}
                 >
-                  <a
-                    href={project.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex-1 px-4 py-3 rounded-xl text-sm font-semibold text-center button-hover hover:shadow-lg ${getButtonHoverClasses('primary')} theme-transition-colors`}
+                  {/* Card Header */}
+                  <div
+                    className={`bg-gradient-to-br ${currentTheme.colors.primary} p-8 relative overflow-hidden theme-transition-bg`}
                   >
-                    Live Demo
-                  </a>
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex-1 px-4 py-3 rounded-xl text-sm font-semibold text-center border-2 button-hover hover:shadow-lg ${getButtonHoverClasses('secondary')} theme-transition-colors theme-transition-border`}
-                  >
-                    View Code
-                  </a>
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full transform translate-x-16 -translate-y-16 theme-transition-colors"></div>
+                    <div className="absolute bottom-0 left-0 w-20 h-20 bg-white/5 rounded-full transform -translate-x-10 translate-y-10 theme-transition-colors"></div>
+
+                    <div className="relative z-10 grid md:grid-cols-2 gap-8 items-center">
+                      <div>
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-6xl">{project.icon}</span>
+                          <span
+                            className={`px-4 py-2 rounded-full text-sm font-medium ${getStatusBadgeClasses(project.status)} theme-transition-colors theme-transition-border`}
+                          >
+                            {project.status}
+                          </span>
+                        </div>
+
+                        <h3 className="text-3xl md:text-4xl font-bold text-white mb-4 theme-transition-text">
+                          {project.title}
+                        </h3>
+
+                        <span
+                          className={`text-sm font-medium ${getCategoryColor()} bg-white/20 px-4 py-2 rounded-full theme-transition-colors theme-transition-text`}
+                        >
+                          {project.category}
+                        </span>
+                      </div>
+
+                      <div className="text-right hidden md:block">
+                        <div className="text-white/80 text-sm mb-2">
+                          Project {index + 1} of {projects.length}
+                        </div>
+                        <div className="flex justify-end space-x-2">
+                          {projects.map((_, i) => (
+                            <div
+                              key={i}
+                              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                i === index ? 'bg-white' : 'bg-white/30'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Content */}
+                  <div className="p-8">
+                    <div className="grid md:grid-cols-2 gap-8">
+                      <div>
+                        <p
+                          className={`${getSecondaryTextColor()} text-lg leading-relaxed mb-6 theme-transition-text`}
+                        >
+                          {project.description}
+                        </p>
+
+                        {/* Action Buttons */}
+                        <div className="flex flex-col sm:flex-row gap-4">
+                          <a
+                            href={project.demo}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`flex-1 px-6 py-3 rounded-xl text-sm font-semibold text-center button-hover hover:shadow-lg ${getButtonHoverClasses('primary')} theme-transition-colors`}
+                          >
+                            Live Demo
+                          </a>
+                          <a
+                            href={project.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`flex-1 px-6 py-3 rounded-xl text-sm font-semibold text-center border-2 button-hover hover:shadow-lg ${getButtonHoverClasses('secondary')} theme-transition-colors theme-transition-border`}
+                          >
+                            View Code
+                          </a>
+                        </div>
+                      </div>
+
+                      <div>
+                        {/* Technologies */}
+                        <h4
+                          className={`text-lg font-semibold ${getTextColor()} mb-4 theme-transition-text`}
+                        >
+                          Technologies Used
+                        </h4>
+                        <div className="flex flex-wrap gap-3">
+                          {project.technologies.map(tech => (
+                            <span
+                              key={tech}
+                              className={`px-4 py-2 rounded-lg text-sm font-medium ${getTechTagClasses()} scale-hover-md hover:shadow-sm theme-transition-colors theme-transition-border transition-all duration-300`}
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </Slider>
+
+          {/* Carousel Controls */}
+          <div className="flex justify-center items-center mt-16 gap-4">
+            <button
+              onClick={() => sliderRef.current?.slickPlay()}
+              className={`px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r ${currentTheme.colors.primary} text-white scale-hover-md theme-transition-colors hover:shadow-lg transition-all duration-300`}
+            >
+              ▶️ Play
+            </button>
+            <button
+              onClick={() => sliderRef.current?.slickPause()}
+              className={`px-4 py-2 rounded-full text-sm font-medium ${getCardBackground()} ${getTextColor()} border ${
+                currentTheme.id === 'dark'
+                  ? 'border-gray-700'
+                  : 'border-gray-200'
+              } scale-hover-md theme-transition-colors theme-transition-border hover:shadow-lg transition-all duration-300`}
+            >
+              ⏸️ Pause
+            </button>
+          </div>
+
+          {/* Navigation Hint */}
+          <div className="text-center mt-4">
+            <p
+              className={`text-sm ${getSecondaryTextColor()} theme-transition-text`}
+            >
+              Use arrow buttons or swipe to navigate • Auto-plays every 5
+              seconds
+            </p>
+          </div>
         </div>
 
         {/* Call to Action */}
