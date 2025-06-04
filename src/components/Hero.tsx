@@ -188,6 +188,7 @@ export default function Hero() {
                                   width={80}
                                   height={80}
                                   className="w-full h-full object-cover"
+                                  priority
                                 />
                               </div>
                             </BaseButton>

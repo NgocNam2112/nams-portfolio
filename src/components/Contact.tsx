@@ -231,6 +231,7 @@ export default function Contact() {
                           src={link.icon}
                           alt={link.name}
                           fill
+                          sizes="24px"
                           className="icon-scale icon-hover theme-transition object-cover"
                         />
                       </div>
