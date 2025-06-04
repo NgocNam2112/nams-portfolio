@@ -1,5 +1,6 @@
 'use client';
 
+import { SKILLS } from '@/constants';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useTheme } from '@/stores/themeStore';
 
@@ -26,35 +27,6 @@ export default function About() {
       ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
       : 'bg-gray-100 text-gray-700 hover:bg-gray-200';
   };
-
-  const skills = [
-    {
-      category: 'Frontend',
-      items: [
-        'React',
-        'Next.js',
-        'TypeScript',
-        'Tailwind CSS',
-        'HTML5',
-        'CSS3',
-      ],
-    },
-    {
-      category: 'Backend',
-      items: [
-        'Node.js',
-        'Python',
-        'Express.js',
-        'FastAPI',
-        'PostgreSQL',
-        'MongoDB',
-      ],
-    },
-    {
-      category: 'Tools & Others',
-      items: ['Git', 'Docker', 'AWS', 'Vercel', 'Figma', 'VS Code'],
-    },
-  ];
 
   const personalityTraits = [
     { emoji: '🎯', trait: 'Detail-oriented' },
@@ -204,7 +176,7 @@ export default function About() {
                   Frontend Development
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {skills[0].items.map((skill, index) => (
+                  {SKILLS[0].items.map((skill, index) => (
                     <span
                       key={skill}
                       className={`${getSkillTagColors()} px-3 py-1 rounded-full text-sm scale-hover-md theme-transition-colors transition-all duration-300 ${
@@ -233,7 +205,7 @@ export default function About() {
                   Backend Development
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {skills[1].items.map((skill, index) => (
+                  {SKILLS[1].items.map((skill, index) => (
                     <span
                       key={skill}
                       className={`${getSkillTagColors()} px-3 py-1 rounded-full text-sm scale-hover-md theme-transition-colors transition-all duration-300 ${
@@ -262,7 +234,7 @@ export default function About() {
                   Tools & Technologies
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {skills[2].items.map((skill, index) => (
+                  {SKILLS[2].items.map((skill, index) => (
                     <span
                       key={skill}
                       className={`${getSkillTagColors()} px-3 py-1 rounded-full text-sm scale-hover-md theme-transition-colors transition-all duration-300 ${

@@ -12,9 +12,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import BaseButton from './helper/BaseButton';
+import { EXPERTISE_AREAS, HERO_SKILLS } from '@/constants';
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false);
@@ -34,50 +35,8 @@ export default function Hero() {
     element?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const getSecondaryButtonClasses = () => {
-    const themeColors = {
-      purple:
-        'border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white',
-      blue: 'border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white',
-      emerald:
-        'border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-white',
-      orange:
-        'border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-white',
-      rose: 'border-rose-400 text-rose-400 hover:bg-rose-400 hover:text-white',
-      dark: 'border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-black',
-    };
-    return (
-      themeColors[currentTheme.id as keyof typeof themeColors] ||
-      themeColors.purple
-    );
-  };
-
   // Show initial animation when mounted, then use scroll animation for re-entry
   const shouldShowAnimation = mounted && (heroVisible || !mounted);
-
-  const skills = [
-    'React',
-    'Next.js',
-    'TypeScript',
-    'Node.js',
-    'Tailwind CSS',
-    'Python',
-  ];
-
-  const expertiseAreas = [
-    {
-      title: 'Frontend Development',
-      skills: ['React', 'Next.js', 'Vue.js', 'TypeScript', 'Tailwind CSS'],
-    },
-    {
-      title: 'Backend Development',
-      skills: ['Node.js', 'Express', 'Python', 'Django', 'PostgreSQL'],
-    },
-    {
-      title: 'Tools & Technologies',
-      skills: ['Git', 'Docker', 'AWS', 'Vercel', 'Figma'],
-    },
-  ];
 
   return (
     <section
@@ -130,7 +89,7 @@ export default function Hero() {
               <button className="px-8 py-3 rounded-full">Get In Touch</button>
             </div>
             <div className="flex flex-wrap justify-center gap-4">
-              {skills.map(skill => (
+              {HERO_SKILLS.map(skill => (
                 <span key={skill} className="px-4 py-2 rounded-full">
                   {skill}
                 </span>
@@ -155,7 +114,7 @@ export default function Hero() {
               <div className="relative">
                 <Dialog open={modalOpen} onOpenChange={setModalOpen}>
                   <DialogTrigger asChild>
-                    <Button
+                    <BaseButton
                       variant="ghost"
                       className="p-0 h-auto w-auto rounded-full hover:bg-transparent group hover:shadow-lg text-white font-semibold button-hover theme-transition-colors"
                     >
@@ -177,7 +136,7 @@ export default function Hero() {
                       <div
                         className={`absolute inset-0 w-32 h-32 md:w-40 md:h-40 rounded-full border-2 ${currentTheme.colors.secondary} border-opacity-30 animate-float theme-transition-border transition-opacity duration-200 ease-out group-hover:border-opacity-60`}
                       ></div>
-                    </Button>
+                    </BaseButton>
                   </DialogTrigger>
                   <DialogContent
                     className={`sm:max-w-[600px] max-h-[80vh] p-0 flex flex-col theme-transition-colors theme-transition-border ${currentTheme.colors.projects} ${
@@ -215,7 +174,7 @@ export default function Hero() {
                         {/* Profile Section */}
                         <div className="flex flex-col sm:flex-row gap-4 items-center">
                           <div className="flex-shrink-0">
-                            <Button
+                            <BaseButton
                               variant="ghost"
                               className="p-0 h-auto w-auto rounded-full hover:bg-transparent"
                               onClick={() => scrollToSection('hero')}
@@ -231,7 +190,7 @@ export default function Hero() {
                                   className="w-full h-full object-cover"
                                 />
                               </div>
-                            </Button>
+                            </BaseButton>
                           </div>
                           <div className="text-center sm:text-left">
                             <h3
@@ -247,8 +206,8 @@ export default function Hero() {
                             <p
                               className={`text-sm mt-1 theme-transition-text ${currentTheme.id === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}
                             >
-                              Building modern web applications with passion and
-                              precision
+                              Building responsive, high-performance web
+                              applications with cutting-edge technologies.
                             </p>
                           </div>
                         </div>
@@ -281,7 +240,7 @@ export default function Hero() {
                           >
                             Areas of Expertise
                           </h4>
-                          {expertiseAreas.map((area, index) => (
+                          {EXPERTISE_AREAS.map((area, index) => (
                             <Card
                               key={index}
                               className={`p-4 scale-hover-sm theme-transition-colors theme-transition-border ${currentTheme.id === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200 shadow-sm'}`}
@@ -311,25 +270,26 @@ export default function Hero() {
 
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                          <Button
+                          <BaseButton
                             onClick={() => {
                               scrollToSection('projects');
                               setModalOpen(false);
                             }}
-                            className={`flex-1 bg-gradient-to-r ${currentTheme.colors.primary} hover:shadow-lg text-white font-semibold button-hover theme-transition-colors`}
+                            variant="primary"
+                            fullWidth
                           >
                             View My Projects
-                          </Button>
-                          <Button
+                          </BaseButton>
+                          <BaseButton
                             variant="outline"
                             onClick={() => {
                               scrollToSection('contact');
                               setModalOpen(false);
                             }}
-                            className={`flex-1 border-2 ${getSecondaryButtonClasses()} font-semibold button-hover theme-transition-colors theme-transition-border`}
+                            fullWidth
                           >
                             Get In Touch
-                          </Button>
+                          </BaseButton>
                         </div>
                       </div>
                     </div>
@@ -362,8 +322,8 @@ export default function Hero() {
             >
               <p>Web Developer</p>
               <p className="text-lg mt-2 text-gray-400 theme-transition-text">
-                Crafting beautiful, functional web experiences with modern
-                technologies
+                Building responsive, high-performance web applications with
+                cutting-edge technologies.
               </p>
             </div>
 
@@ -374,27 +334,31 @@ export default function Hero() {
                   : 'opacity-0'
               }`}
             >
-              <Button
+              <BaseButton
                 onClick={() => scrollToSection('projects')}
-                className={`bg-gradient-to-r ${currentTheme.colors.primary} hover:shadow-md text-white px-12 py-6 rounded-full font-medium button-hover shadow-sm theme-transition-colors border-0 hover:opacity-90`}
+                variant="primary"
+                size="lg"
+                className="px-12 py-6 rounded-full"
               >
                 View My Work
-              </Button>
-              <Button
+              </BaseButton>
+              <BaseButton
                 variant="outline"
+                size="lg"
                 onClick={() => scrollToSection('contact')}
-                className={`border ${getSecondaryButtonClasses()} px-12 py-6 rounded-full font-medium button-hover theme-transition-colors theme-transition-border bg-white/5 hover:bg-white/10 backdrop-blur-sm`}
+                className="px-12 py-6 rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-sm"
               >
                 Get In Touch
-              </Button>
+              </BaseButton>
               <Dialog open={modalOpen} onOpenChange={setModalOpen}>
                 <DialogTrigger asChild>
-                  <Button
+                  <BaseButton
                     variant="outline"
-                    className={`border border-white/20 text-white/90 hover:text-white hover:bg-white/5 px-12 py-6 rounded-full font-medium button-hover theme-transition-colors theme-transition-border bg-white/5 backdrop-blur-sm hover:border-white/40`}
+                    size="lg"
+                    className="px-12 py-6 rounded-full bg-white/5 backdrop-blur-sm hover:bg-white/10"
                   >
                     About Me
-                  </Button>
+                  </BaseButton>
                 </DialogTrigger>
               </Dialog>
             </div>
@@ -407,7 +371,7 @@ export default function Hero() {
                   : 'opacity-0'
               }`}
             >
-              {skills.map((skill, index) => (
+              {HERO_SKILLS.map((skill, index) => (
                 <span
                   key={skill}
                   className={`bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full border border-white/20 hover:bg-white/20 scale-hover-md cursor-default theme-transition-colors theme-transition-border transition-all duration-300 ${

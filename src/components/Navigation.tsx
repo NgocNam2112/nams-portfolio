@@ -9,7 +9,7 @@ import {
   DrawerTrigger,
   DrawerTitle,
 } from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button';
+import BaseButton from './helper/BaseButton';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -288,7 +288,7 @@ export default function Navigation() {
               <div className="p-6 space-y-3">
                 {navItems.map(item => {
                   return (
-                    <Button
+                    <BaseButton
                       key={item.id}
                       onClick={item.action}
                       variant="ghost"
@@ -322,13 +322,13 @@ export default function Navigation() {
                           className={`w-2 h-2 rounded-full bg-gradient-to-r ${currentTheme.colors.primary} theme-transition-colors opacity-60 group-hover:opacity-100 group-hover:scale-125 transition-all duration-200`}
                         ></div>
                       </div>
-                    </Button>
+                    </BaseButton>
                   );
                 })}
 
                 {/* Enhanced Close button */}
                 <div className="pt-6 mt-6 border-t theme-transition-border border-gray-200 dark:border-gray-700">
-                  <Button
+                  <BaseButton
                     onClick={closeMobileMenu}
                     variant="outline"
                     className={`w-full font-medium theme-transition-colors theme-transition-border rounded-xl h-12 ${
@@ -338,7 +338,7 @@ export default function Navigation() {
                     } scale-hover-sm`}
                   >
                     Close Menu
-                  </Button>
+                  </BaseButton>
                 </div>
               </div>
             </DrawerContent>

@@ -4,12 +4,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useTheme } from '@/stores/themeStore';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ContactFormData, contactSchema } from '@/types/ContactFormType';
+import { SOCIAL_LINKS } from '@/constants';
+import BaseInput from './helper/BaseInput';
+import BaseTextArea from './helper/BaseTextArea';
+import BaseButton from './helper/BaseButton';
 
 // Form validation schema
 
@@ -60,29 +61,6 @@ export default function Contact() {
     );
   };
 
-  const socialLinks = [
-    {
-      name: 'GitHub',
-      icon: '/github.png',
-      url: process.env.NEXT_PUBLIC_GITHUB_URL,
-    },
-    {
-      name: 'LinkedIn',
-      icon: '/linkedin.png',
-      url: process.env.NEXT_PUBLIC_LINKEDIN_URL,
-    },
-    {
-      name: 'YouTube',
-      icon: '/youtube.png',
-      url: process.env.NEXT_PUBLIC_YOUTUBE_URL,
-    },
-    {
-      name: 'Email',
-      icon: '/email.png',
-      url: process.env.NEXT_PUBLIC_EMAIL_URL,
-    },
-  ];
-
   return (
     <section
       id="contact"
@@ -130,28 +108,13 @@ export default function Contact() {
                     : 'opacity-0'
                 }`}
               >
-                <label
-                  htmlFor="name"
-                  className="block text-gray-300 text-sm font-medium mb-2 theme-transition-text"
-                >
-                  Your Name
-                </label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="John Doe"
-                  {...register('name')}
-                  className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 ${getFocusRingColor()} focus-visible:border-transparent input-focus theme-transition-colors theme-transition-border ${
-                    errors.name
-                      ? 'border-red-500 focus-visible:ring-red-500'
-                      : ''
-                  }`}
+                <BaseInput
+                  label="Your Name"
+                  name="name"
+                  register={register}
+                  error={errors.name}
+                  getFocusRingColor={getFocusRingColor()}
                 />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-400">
-                    {errors.name.message}
-                  </p>
-                )}
               </div>
 
               <div
@@ -161,28 +124,13 @@ export default function Contact() {
                     : 'opacity-0'
                 }`}
               >
-                <label
-                  htmlFor="email"
-                  className="block text-gray-300 text-sm font-medium mb-2 theme-transition-text"
-                >
-                  Email Address
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john@example.com"
-                  {...register('email')}
-                  className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 ${getFocusRingColor()} focus-visible:border-transparent input-focus theme-transition-colors theme-transition-border ${
-                    errors.email
-                      ? 'border-red-500 focus-visible:ring-red-500'
-                      : ''
-                  }`}
+                <BaseInput
+                  label="Email Address"
+                  name="email"
+                  register={register}
+                  error={errors.email}
+                  getFocusRingColor={getFocusRingColor()}
                 />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-400">
-                    {errors.email.message}
-                  </p>
-                )}
               </div>
 
               <div
@@ -192,41 +140,27 @@ export default function Contact() {
                     : 'opacity-0'
                 }`}
               >
-                <label
-                  htmlFor="message"
-                  className="block text-gray-300 text-sm font-medium mb-2 theme-transition-text"
-                >
-                  Message
-                </label>
-                <Textarea
-                  id="message"
-                  rows={5}
-                  placeholder="Tell me about your project or just say hello!"
-                  {...register('message')}
-                  className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 ${getFocusRingColor()} focus-visible:border-transparent resize-none textarea-focus theme-transition-colors theme-transition-border ${
-                    errors.message
-                      ? 'border-red-500 focus-visible:ring-red-500'
-                      : ''
-                  }`}
+                <BaseTextArea
+                  label="Message"
+                  name="message"
+                  register={register}
+                  error={errors.message}
+                  getFocusRingColor={getFocusRingColor()}
                 />
-                {errors.message && (
-                  <p className="mt-1 text-sm text-red-400">
-                    {errors.message.message}
-                  </p>
-                )}
               </div>
 
-              <Button
+              <BaseButton
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full bg-gradient-to-r ${currentTheme.colors.primary} hover:shadow-xl text-white py-3 px-6 rounded-lg font-semibold button-hover shadow-lg theme-transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                fullWidth
+                className={`scale-hover-md ${
                   formVisible
                     ? 'animate-fade-in-up animate-stagger-4'
                     : 'opacity-0'
                 }`}
               >
                 {isSubmitting ? 'Sending...' : 'Send Message'}
-              </Button>
+              </BaseButton>
             </form>
           </div>
 
@@ -280,7 +214,7 @@ export default function Contact() {
                 Find Me Online
               </h3>
               <div className="grid grid-cols-2 gap-4">
-                {socialLinks.map((link, index) => (
+                {SOCIAL_LINKS.map((link, index) => (
                   <Link
                     key={index}
                     href={link.url || ''}

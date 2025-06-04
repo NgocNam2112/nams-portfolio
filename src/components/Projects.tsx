@@ -3,6 +3,7 @@
 import { useTheme } from '@/stores/themeStore';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
   Carousel,
   CarouselContent,
@@ -11,6 +12,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel';
+import BaseButton from './helper/BaseButton';
 
 export default function Projects() {
   const { currentTheme } = useTheme();
@@ -32,48 +34,12 @@ export default function Projects() {
     });
   }, [api]);
 
-  const getButtonHoverClasses = (variant: 'primary' | 'secondary') => {
-    const themeMap = {
-      purple: {
-        primary:
-          'bg-purple-600 hover:bg-purple-700 text-white hover:shadow-purple-500/25',
-        secondary:
-          'border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-white hover:shadow-purple-400/25',
-      },
-      blue: {
-        primary:
-          'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-blue-500/25',
-        secondary:
-          'border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white hover:shadow-blue-400/25',
-      },
-      emerald: {
-        primary:
-          'bg-emerald-600 hover:bg-emerald-700 text-white hover:shadow-emerald-500/25',
-        secondary:
-          'border-emerald-400 text-emerald-400 hover:bg-emerald-400 hover:text-white hover:shadow-emerald-400/25',
-      },
-      orange: {
-        primary:
-          'bg-orange-600 hover:bg-orange-700 text-white hover:shadow-orange-500/25',
-        secondary:
-          'border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-white hover:shadow-orange-400/25',
-      },
-      rose: {
-        primary:
-          'bg-rose-600 hover:bg-rose-700 text-white hover:shadow-rose-500/25',
-        secondary:
-          'border-rose-400 text-rose-400 hover:bg-rose-400 hover:text-white hover:shadow-rose-400/25',
-      },
-      dark: {
-        primary:
-          'bg-gray-600 hover:bg-gray-700 text-white hover:shadow-gray-500/25',
-        secondary:
-          'border-gray-400 text-gray-400 hover:bg-gray-400 hover:text-black hover:shadow-gray-400/25',
-      },
-    };
+  const getTextColor = () => {
+    return currentTheme.id === 'dark' ? 'text-white' : 'text-gray-900';
+  };
 
-    const themeKey = currentTheme.id as keyof typeof themeMap;
-    return themeMap[themeKey]?.[variant] || themeMap.purple[variant];
+  const getSecondaryTextColor = () => {
+    return currentTheme.id === 'dark' ? 'text-gray-300' : 'text-gray-600';
   };
 
   const getTechTagClasses = () => {
@@ -95,14 +61,6 @@ export default function Projects() {
 
   const getCardBackground = () => {
     return currentTheme.id === 'dark' ? 'bg-gray-800/90' : 'bg-white';
-  };
-
-  const getTextColor = () => {
-    return currentTheme.id === 'dark' ? 'text-white' : 'text-gray-900';
-  };
-
-  const getSecondaryTextColor = () => {
-    return currentTheme.id === 'dark' ? 'text-gray-300' : 'text-gray-600';
   };
 
   const projects = [
@@ -300,22 +258,26 @@ export default function Projects() {
 
                           {/* Action Buttons */}
                           <div className="flex flex-col sm:flex-row gap-4">
-                            <a
+                            <Link
                               href={project.demo}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className={`flex-1 px-6 py-3 rounded-xl text-sm font-semibold text-center button-hover hover:shadow-lg ${getButtonHoverClasses('primary')} theme-transition-colors`}
+                              className="flex-1"
                             >
-                              Live Demo
-                            </a>
-                            <a
+                              <BaseButton variant="primary" fullWidth>
+                                Live Demo
+                              </BaseButton>
+                            </Link>
+                            <Link
                               href={project.github}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className={`flex-1 px-6 py-3 rounded-xl text-sm font-semibold text-center border-2 button-hover hover:shadow-lg ${getButtonHoverClasses('secondary')} theme-transition-colors theme-transition-border`}
+                              className="flex-1"
                             >
-                              View Code
-                            </a>
+                              <BaseButton variant="outline" fullWidth>
+                                View Code
+                              </BaseButton>
+                            </Link>
                           </div>
                         </div>
 
@@ -370,16 +332,20 @@ export default function Projects() {
             </div>
             <div className="flex gap-2 ml-4">
               {Array.from({ length: count }).map((_, index) => (
-                <button
+                <BaseButton
                   key={index}
                   onClick={() => api?.scrollTo(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === current - 1
-                      ? `bg-gradient-to-r ${currentTheme.colors.primary} shadow-lg scale-110`
-                      : currentTheme.id === 'dark'
-                        ? 'bg-gray-600 hover:bg-gray-500'
-                        : 'bg-gray-300 hover:bg-gray-400'
-                  } theme-transition-colors`}
+                  variant="ghost"
+                  size="sm"
+                  className={`w-3 h-3 min-w-0 min-h-0 p-0 rounded-full transition-all duration-300
+                    ${
+                      index === current - 1
+                        ? `bg-gradient-to-r ${currentTheme.colors.primary || 'from-blue-500 to-purple-500'} shadow-lg scale-110 border border-blue-400`
+                        : currentTheme.id === 'dark'
+                          ? 'bg-gray-600 hover:bg-gray-500 border border-gray-500'
+                          : 'bg-gray-300 hover:bg-gray-400 border border-gray-300'
+                    } theme-transition-colors`}
+                  aria-label={`Go to slide ${index + 1}`}
                 />
               ))}
             </div>
