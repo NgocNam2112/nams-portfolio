@@ -6,19 +6,26 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useTheme } from '@/stores/themeStore';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ContactFormData, contactSchema } from '@/types/ContactFormType';
-import { SOCIAL_LINKS } from '@/constants';
+import { ContactFormData, contactSchema } from '@/types/schema/contact-form';
+import { SOCIAL_LINKS, THEME_FORCUS_RING_COLOR } from '@/constants';
 import BaseInput from './helper/BaseInput';
 import BaseTextArea from './helper/BaseTextArea';
 import BaseButton from './helper/BaseButton';
-
-// Form validation schema
+import { useMemo } from 'react';
 
 export default function Contact() {
   const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
   const { ref: formRef, isVisible: formVisible } = useScrollAnimation();
   const { ref: infoRef, isVisible: infoVisible } = useScrollAnimation();
   const { currentTheme } = useTheme();
+
+  const focusRingColor = useMemo(
+    () =>
+      THEME_FORCUS_RING_COLOR[
+        currentTheme.id as keyof typeof THEME_FORCUS_RING_COLOR
+      ] || THEME_FORCUS_RING_COLOR.purple,
+    [currentTheme.id]
+  );
 
   const {
     register,
@@ -31,34 +38,16 @@ export default function Contact() {
 
   const onSubmit = async (data: ContactFormData) => {
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       console.log('Form submitted:', data);
 
-      // Reset form after successful submission
       reset();
 
-      // You can add success notification here
       alert('Message sent successfully!');
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Error sending message. Please try again.');
     }
-  };
-
-  const getFocusRingColor = () => {
-    const themeColors = {
-      purple: 'focus-visible:ring-purple-500',
-      blue: 'focus-visible:ring-blue-500',
-      emerald: 'focus-visible:ring-emerald-500',
-      orange: 'focus-visible:ring-orange-500',
-      rose: 'focus-visible:ring-rose-500',
-      dark: 'focus-visible:ring-gray-500',
-    };
-    return (
-      themeColors[currentTheme.id as keyof typeof themeColors] ||
-      themeColors.purple
-    );
   };
 
   return (
@@ -113,7 +102,7 @@ export default function Contact() {
                   name="name"
                   register={register}
                   error={errors.name}
-                  getFocusRingColor={getFocusRingColor()}
+                  focusRingColor={focusRingColor}
                 />
               </div>
 
@@ -129,7 +118,7 @@ export default function Contact() {
                   name="email"
                   register={register}
                   error={errors.email}
-                  getFocusRingColor={getFocusRingColor()}
+                  focusRingColor={focusRingColor}
                 />
               </div>
 
@@ -145,7 +134,7 @@ export default function Contact() {
                   name="message"
                   register={register}
                   error={errors.message}
-                  getFocusRingColor={getFocusRingColor()}
+                  focusRingColor={focusRingColor}
                 />
               </div>
 
@@ -164,7 +153,6 @@ export default function Contact() {
             </form>
           </div>
 
-          {/* Contact Info & Social Links */}
           <div
             ref={infoRef}
             className={`space-y-8 transition-all duration-700 ${

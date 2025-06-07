@@ -13,7 +13,7 @@ interface BaseInputProps<T extends FieldValues>
   name: Path<T>;
   error: FieldError | undefined;
   register: UseFormRegister<T>;
-  getFocusRingColor: string;
+  focusRingColor: string;
 }
 
 function mergeRefs<T>(...refs: (React.Ref<T> | undefined)[]) {
@@ -31,13 +31,14 @@ const BaseInput = <T extends FieldValues>({
   name,
   register,
   error,
-  getFocusRingColor,
+  focusRingColor,
   ...props
 }: BaseInputProps<T>) => {
   const { ref: registerRef, ...restRegister } = register(name);
   const inputRef = (props as { ref?: React.Ref<HTMLInputElement> }).ref;
   const inputProps = { ...props };
   if ('ref' in inputProps) delete inputProps.ref;
+
   return (
     <>
       <label
@@ -52,7 +53,7 @@ const BaseInput = <T extends FieldValues>({
         placeholder="John Doe"
         ref={mergeRefs(inputRef, registerRef)}
         {...restRegister}
-        className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 ${getFocusRingColor} focus-visible:border-transparent input-focus theme-transition-colors theme-transition-border ${
+        className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 ${focusRingColor} focus-visible:border-transparent input-focus theme-transition-colors theme-transition-border ${
           error ? 'border-red-500 focus-visible:ring-red-500' : ''
         }`}
         {...inputProps}

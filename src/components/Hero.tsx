@@ -35,7 +35,6 @@ export default function Hero() {
     element?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  // Show initial animation when mounted, then use scroll animation for re-entry
   const shouldShowAnimation = mounted && (heroVisible || !mounted);
 
   return (
@@ -43,7 +42,6 @@ export default function Hero() {
       ref={heroRef}
       className={`min-h-screen flex items-center justify-center relative overflow-hidden theme-transition-bg ${currentTheme.colors.hero}`}
     >
-      {/* Animated background elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float theme-transition-colors"></div>
         <div
@@ -58,7 +56,6 @@ export default function Hero() {
 
       <div className="container mx-auto px-6 text-center relative z-10 pb-32 md:pb-20 2xl:pb-0">
         {!mounted ? (
-          // Server-side and initial client render - static content
           <div className="opacity-0">
             <div className="mb-8 flex justify-center">
               <div className="relative">
@@ -97,7 +94,6 @@ export default function Hero() {
             </div>
           </div>
         ) : (
-          // Client-side rendered content with animations
           <div
             className={`transition-all duration-1000 ${
               shouldShowAnimation
@@ -105,7 +101,6 @@ export default function Hero() {
                 : 'opacity-0 translate-y-8'
             }`}
           >
-            {/* Avatar with Dialog Trigger */}
             <div
               className={`mb-8 flex justify-center mt-20 md:mt-10 xl:mt-0 transition-all duration-500 ${
                 shouldShowAnimation ? 'animate-scale-in' : 'opacity-0 scale-95'
@@ -132,7 +127,6 @@ export default function Hero() {
                           />
                         </div>
                       </div>
-                      {/* Floating animation ring */}
                       <div
                         className={`absolute inset-0 w-32 h-32 md:w-40 md:h-40 rounded-full border-2 ${currentTheme.colors.secondary} border-opacity-30 animate-float theme-transition-border transition-opacity duration-200 ease-out group-hover:border-opacity-60`}
                       ></div>
@@ -145,7 +139,6 @@ export default function Hero() {
                         : 'border-gray-200'
                     }`}
                   >
-                    {/* Sticky Header */}
                     <div
                       className={`sticky top-0 z-10 px-6 py-4 border-b theme-transition-colors theme-transition-border ${
                         currentTheme.id === 'dark'
@@ -168,10 +161,8 @@ export default function Hero() {
                       </DialogHeader>
                     </div>
 
-                    {/* Scrollable Content */}
                     <div className="px-6 py-4 pb-8 flex-1 overflow-y-auto">
                       <div className="space-y-6 pb-4">
-                        {/* Profile Section */}
                         <div className="flex flex-col sm:flex-row gap-4 items-center">
                           <div className="flex-shrink-0">
                             <BaseButton
@@ -213,7 +204,6 @@ export default function Hero() {
                           </div>
                         </div>
 
-                        {/* About Text */}
                         <div className="space-y-3">
                           <p
                             className={`text-sm leading-relaxed theme-transition-text ${currentTheme.id === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}
@@ -234,7 +224,6 @@ export default function Hero() {
                           </p>
                         </div>
 
-                        {/* Expertise Areas */}
                         <div className="space-y-4">
                           <h4
                             className={`font-semibold text-base theme-transition-text ${currentTheme.id === 'dark' ? 'text-white' : 'text-gray-900'}`}
@@ -269,7 +258,6 @@ export default function Hero() {
                           ))}
                         </div>
 
-                        {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row gap-3 pt-4">
                           <BaseButton
                             onClick={() => {
@@ -364,7 +352,6 @@ export default function Hero() {
               </Dialog>
             </div>
 
-            {/* Skills preview */}
             <div
               className={`flex flex-wrap justify-center gap-4 text-sm transition-all duration-500 ${
                 shouldShowAnimation
@@ -390,7 +377,6 @@ export default function Hero() {
         )}
       </div>
 
-      {/* Scroll indicator */}
       {mounted && (
         <div
           className={`absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce transition-all duration-700 ${

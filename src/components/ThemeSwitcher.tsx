@@ -16,7 +16,6 @@ export default function ThemeSwitcher() {
   const [open, setOpen] = useState(false);
   const { currentTheme, setTheme, themes } = useTheme();
 
-  // Use defaultThemes as fallback if themes array is empty
   const availableThemes = themes && themes.length > 0 ? themes : defaultThemes;
 
   useEffect(() => {

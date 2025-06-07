@@ -95,3 +95,31 @@ export const HERO_SKILLS = [
   'Tailwind CSS',
   'Python',
 ];
+
+export const THEME_FORCUS_RING_COLOR = {
+  purple: 'focus-visible:ring-purple-500',
+  blue: 'focus-visible:ring-blue-500',
+  emerald: 'focus-visible:ring-emerald-500',
+  orange: 'focus-visible:ring-orange-500',
+  rose: 'focus-visible:ring-rose-500',
+  dark: 'focus-visible:ring-gray-500',
+};
+
+export const NAV_ITEMS = [
+  { name: 'Home', id: 'home', label: 'Back to top' },
+  {
+    name: 'About',
+    id: 'about',
+    label: 'Learn about me',
+  },
+  {
+    name: 'Projects',
+    id: 'projects',
+    label: 'View my work',
+  },
+  {
+    name: 'Contact',
+    id: 'contact',
+    label: 'Get in touch',
+  },
+];

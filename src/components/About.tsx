@@ -1,6 +1,7 @@
 'use client';
 
 import { SKILLS } from '@/constants';
+import { useAboutColor } from '@/hooks/useAboutColor';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 import { useTheme } from '@/stores/themeStore';
 
@@ -10,30 +11,20 @@ export default function About() {
   const { ref: skillsRef, isVisible: skillsVisible } = useScrollAnimation();
   const { currentTheme } = useTheme();
 
-  const getTextColor = () => {
-    return currentTheme.id === 'dark' ? 'text-white' : 'text-gray-800';
-  };
+  const {
+    textColor,
+    secondaryTextColor,
+    cardBackground,
+    skillTagColors,
+    personalityTraits,
+  } = useAboutColor(currentTheme);
 
-  const getSecondaryTextColor = () => {
-    return currentTheme.id === 'dark' ? 'text-gray-300' : 'text-gray-600';
+  const handleScrollToContact = () => {
+    const contactSection = document.getElementById('contact');
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: 'smooth' });
+    }
   };
-
-  const getCardBackground = () => {
-    return currentTheme.id === 'dark' ? 'bg-gray-800' : 'bg-white';
-  };
-
-  const getSkillTagColors = () => {
-    return currentTheme.id === 'dark'
-      ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-      : 'bg-gray-100 text-gray-700 hover:bg-gray-200';
-  };
-
-  const personalityTraits = [
-    { emoji: '🎯', trait: 'Detail-oriented' },
-    { emoji: '🚀', trait: 'Innovation-driven' },
-    { emoji: '🤝', trait: 'Team player' },
-    { emoji: '📚', trait: 'Continuous learner' },
-  ];
 
   return (
     <section
@@ -50,7 +41,7 @@ export default function About() {
           }`}
         >
           <h2
-            className={`text-4xl md:text-5xl font-bold ${getTextColor()} mb-4 theme-transition-text`}
+            className={`text-4xl md:text-5xl font-bold ${textColor} mb-4 theme-transition-text`}
           >
             About Me
           </h2>
@@ -58,7 +49,7 @@ export default function About() {
             className={`w-24 h-1 bg-gradient-to-r ${currentTheme.colors.primary} mx-auto mb-6 theme-transition-colors`}
           ></div>
           <p
-            className={`${getSecondaryTextColor()} max-w-2xl mx-auto theme-transition-text`}
+            className={`${secondaryTextColor} max-w-2xl mx-auto theme-transition-text`}
           >
             Passionate about creating digital experiences that make a difference
           </p>
@@ -68,22 +59,21 @@ export default function About() {
           ref={contentRef}
           className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto"
         >
-          {/* Personal Info */}
           <div
-            className={`${getCardBackground()} rounded-2xl p-8 shadow-lg scale-hover-md hover:shadow-2xl theme-transition-colors transition-all duration-700 ${
+            className={`${cardBackground} rounded-2xl p-8 shadow-lg scale-hover-md hover:shadow-2xl theme-transition-colors transition-all duration-700 ${
               contentVisible
                 ? 'opacity-100 translate-x-0'
                 : 'opacity-0 -translate-x-8'
             }`}
           >
             <h3
-              className={`text-2xl font-semibold ${getTextColor()} mb-6 theme-transition-text`}
+              className={`text-2xl font-semibold ${textColor} mb-6 theme-transition-text`}
             >
               Who I Am
             </h3>
             <div className="space-y-4">
               <p
-                className={`${getSecondaryTextColor()} leading-relaxed theme-transition-text transition-all duration-500 ${
+                className={`${secondaryTextColor} leading-relaxed theme-transition-text transition-all duration-500 ${
                   contentVisible
                     ? 'animate-fade-in-up animate-stagger-1'
                     : 'opacity-0'
@@ -99,7 +89,7 @@ export default function About() {
                 problems into simple, beautiful, and intuitive solutions.
               </p>
               <p
-                className={`${getSecondaryTextColor()} leading-relaxed theme-transition-text transition-all duration-500 ${
+                className={`${secondaryTextColor} leading-relaxed theme-transition-text transition-all duration-500 ${
                   contentVisible
                     ? 'animate-fade-in-up animate-stagger-2'
                     : 'opacity-0'
@@ -111,10 +101,9 @@ export default function About() {
               </p>
             </div>
 
-            {/* Personality Traits */}
             <div className="mt-8">
               <h4
-                className={`text-lg font-semibold ${getTextColor()} mb-4 theme-transition-text transition-all duration-500 ${
+                className={`text-lg font-semibold ${textColor} mb-4 theme-transition-text transition-all duration-500 ${
                   contentVisible
                     ? 'animate-fade-in-up animate-stagger-3'
                     : 'opacity-0'
@@ -126,7 +115,7 @@ export default function About() {
                 {personalityTraits.map((item, index) => (
                   <div
                     key={index}
-                    className={`flex items-center gap-3 p-3 ${getCardBackground()} rounded-lg border scale-hover-md theme-transition-colors theme-transition-border transition-all duration-500 ${
+                    className={`flex items-center gap-3 p-3 ${cardBackground} rounded-lg border scale-hover-md theme-transition-colors theme-transition-border transition-all duration-500 ${
                       currentTheme.id === 'dark'
                         ? 'border-gray-700'
                         : 'border-gray-200'
@@ -137,7 +126,7 @@ export default function About() {
                   >
                     <span className="text-2xl">{item.emoji}</span>
                     <span
-                      className={`text-sm font-medium ${getTextColor()} theme-transition-text`}
+                      className={`text-sm font-medium ${textColor} theme-transition-text`}
                     >
                       {item.trait}
                     </span>
@@ -147,17 +136,16 @@ export default function About() {
             </div>
           </div>
 
-          {/* Skills */}
           <div
             ref={skillsRef}
-            className={`${getCardBackground()} rounded-2xl p-8 shadow-lg scale-hover-md hover:shadow-2xl theme-transition-colors transition-all duration-700 ${
+            className={`${cardBackground} rounded-2xl p-8 shadow-lg scale-hover-md hover:shadow-2xl theme-transition-colors transition-all duration-700 ${
               skillsVisible
                 ? 'opacity-100 translate-x-0'
                 : 'opacity-0 translate-x-8'
             }`}
           >
             <h3
-              className={`text-2xl font-semibold ${getTextColor()} mb-6 theme-transition-text`}
+              className={`text-2xl font-semibold ${textColor} mb-6 theme-transition-text`}
             >
               Technical Skills
             </h3>
@@ -171,7 +159,7 @@ export default function About() {
                 }`}
               >
                 <h4
-                  className={`text-lg font-medium ${getTextColor()} mb-3 theme-transition-text`}
+                  className={`text-lg font-medium ${textColor} mb-3 theme-transition-text`}
                 >
                   Frontend Development
                 </h4>
@@ -179,7 +167,7 @@ export default function About() {
                   {SKILLS[0].items.map((skill, index) => (
                     <span
                       key={skill}
-                      className={`${getSkillTagColors()} px-3 py-1 rounded-full text-sm scale-hover-md theme-transition-colors transition-all duration-300 ${
+                      className={`${skillTagColors} px-3 py-1 rounded-full text-sm scale-hover-md theme-transition-colors transition-all duration-300 ${
                         skillsVisible
                           ? 'animate-scale-in'
                           : 'opacity-0 scale-95'
@@ -200,7 +188,7 @@ export default function About() {
                 }`}
               >
                 <h4
-                  className={`text-lg font-medium ${getTextColor()} mb-3 theme-transition-text`}
+                  className={`text-lg font-medium ${textColor} mb-3 theme-transition-text`}
                 >
                   Backend Development
                 </h4>
@@ -208,7 +196,7 @@ export default function About() {
                   {SKILLS[1].items.map((skill, index) => (
                     <span
                       key={skill}
-                      className={`${getSkillTagColors()} px-3 py-1 rounded-full text-sm scale-hover-md theme-transition-colors transition-all duration-300 ${
+                      className={`${skillTagColors} px-3 py-1 rounded-full text-sm scale-hover-md theme-transition-colors transition-all duration-300 ${
                         skillsVisible
                           ? 'animate-scale-in'
                           : 'opacity-0 scale-95'
@@ -229,7 +217,7 @@ export default function About() {
                 }`}
               >
                 <h4
-                  className={`text-lg font-medium ${getTextColor()} mb-3 theme-transition-text`}
+                  className={`text-lg font-medium ${textColor} mb-3 theme-transition-text`}
                 >
                   Tools & Technologies
                 </h4>
@@ -237,7 +225,7 @@ export default function About() {
                   {SKILLS[2].items.map((skill, index) => (
                     <span
                       key={skill}
-                      className={`${getSkillTagColors()} px-3 py-1 rounded-full text-sm scale-hover-md theme-transition-colors transition-all duration-300 ${
+                      className={`${skillTagColors} px-3 py-1 rounded-full text-sm scale-hover-md theme-transition-colors transition-all duration-300 ${
                         skillsVisible
                           ? 'animate-scale-in'
                           : 'opacity-0 scale-95'
@@ -251,14 +239,9 @@ export default function About() {
               </div>
             </div>
 
-            {/* CTA */}
             <div className="mt-8">
               <button
-                onClick={() =>
-                  document
-                    .getElementById('contact')
-                    ?.scrollIntoView({ behavior: 'smooth' })
-                }
+                onClick={handleScrollToContact}
                 className={`w-full bg-gradient-to-r ${currentTheme.colors.primary} hover:shadow-xl text-white py-3 px-6 rounded-lg font-semibold button-hover shadow-lg theme-transition-colors transition-all duration-500 ${
                   skillsVisible
                     ? 'animate-fade-in-up animate-stagger-4'

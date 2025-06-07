@@ -13,7 +13,7 @@ interface BaseTextAreaProps<T extends FieldValues>
   name: Path<T>;
   register: UseFormRegister<T>;
   error: FieldError | undefined;
-  getFocusRingColor: string;
+  focusRingColor: string;
   row?: number;
 }
 
@@ -32,7 +32,7 @@ const BaseTextArea = <T extends FieldValues>({
   name,
   register,
   error,
-  getFocusRingColor,
+  focusRingColor,
   row = 5,
   ...props
 }: BaseTextAreaProps<T>) => {
@@ -55,7 +55,7 @@ const BaseTextArea = <T extends FieldValues>({
         placeholder="Tell me about your project or just say hello!"
         ref={mergeRefs(textAreaRef, registerRef)}
         {...restRegister}
-        className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 ${getFocusRingColor} focus-visible:border-transparent resize-none textarea-focus theme-transition-colors theme-transition-border ${
+        className={`w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus-visible:ring-2 ${focusRingColor} focus-visible:border-transparent resize-none textarea-focus theme-transition-colors theme-transition-border ${
           error ? 'border-red-500 focus-visible:ring-red-500' : ''
         }`}
         {...textareaProps}

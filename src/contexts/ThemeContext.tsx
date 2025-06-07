@@ -1,5 +1,6 @@
 'use client';
 
+import { getItem, setItem } from '@/lib/storage';
 import {
   createContext,
   useContext,
@@ -160,28 +161,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     themes.find(theme => theme.id === currentThemeId) || themes[0];
 
   useEffect(() => {
-    // Load theme from localStorage
-    const savedTheme = localStorage.getItem('portfolio-theme');
+    const savedTheme = getItem('portfolio-theme');
     if (savedTheme && themes.find(theme => theme.id === savedTheme)) {
       setCurrentThemeId(savedTheme);
     }
   }, []);
 
   useEffect(() => {
-    // Apply theme class to body for scrollbar styling
     if (typeof document !== 'undefined') {
-      // Remove all theme classes
       themes.forEach(theme => {
         document.body.classList.remove(`theme-${theme.id}`);
       });
-      // Add current theme class
       document.body.classList.add(`theme-${currentTheme.id}`);
     }
   }, [currentTheme.id]);
 
   const setTheme = (themeId: string) => {
     setCurrentThemeId(themeId);
-    localStorage.setItem('portfolio-theme', themeId);
+    setItem('portfolio-theme', themeId);
   };
 
   return (

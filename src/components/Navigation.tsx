@@ -10,6 +10,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import BaseButton from './helper/BaseButton';
+import { NAV_ITEMS } from '@/constants';
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -34,33 +35,6 @@ export default function Navigation() {
     element?.scrollIntoView({ behavior: 'smooth' });
     closeMobileMenu();
   };
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    closeMobileMenu();
-  };
-
-  const navItems = [
-    { name: 'Home', id: 'home', label: 'Back to top', action: scrollToTop },
-    {
-      name: 'About',
-      id: 'about',
-      label: 'Learn about me',
-      action: () => scrollToSection('about'),
-    },
-    {
-      name: 'Projects',
-      id: 'projects',
-      label: 'View my work',
-      action: () => scrollToSection('projects'),
-    },
-    {
-      name: 'Contact',
-      id: 'contact',
-      label: 'Get in touch',
-      action: () => scrollToSection('contact'),
-    },
-  ];
 
   const getNavBackground = () => {
     if (isScrolled) {
@@ -134,6 +108,10 @@ export default function Navigation() {
     return 'border-white/20';
   };
 
+  useEffect(() => {
+    console.log('isScrolled', isScrolled);
+  }, [isScrolled]);
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b theme-transition-colors theme-transition-border ${getNavBackground()}`}
@@ -170,10 +148,9 @@ export default function Navigation() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map(item => (
+            {NAV_ITEMS.map(item => (
               <button
                 key={item.id}
-                onClick={item.action}
                 className={`scale-hover-md theme-transition-text ${getTextColor()} ${getHoverTextColor()}`}
               >
                 {item.name}
@@ -286,11 +263,10 @@ export default function Navigation() {
               </div>
 
               <div className="p-6 space-y-3">
-                {navItems.map(item => {
+                {NAV_ITEMS.map(item => {
                   return (
                     <BaseButton
                       key={item.id}
-                      onClick={item.action}
                       variant="ghost"
                       className={`w-full justify-start text-left h-auto p-4 font-medium scale-hover-sm theme-transition-colors rounded-xl group ${
                         currentTheme.id === 'dark'
