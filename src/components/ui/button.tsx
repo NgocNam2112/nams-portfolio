@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { useTheme } from '@/stores/themeStore';
 
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
     variants: {
       variant: {
@@ -20,12 +21,18 @@ const buttonVariants = cva(
         ghost:
           'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
         link: 'text-primary underline-offset-4 hover:underline',
+        primary: 'bg-gradient-to-r hover:shadow-xl text-white',
+        themedSecondary: 'bg-gradient-to-r hover:shadow-xl text-white',
+        themedOutline:
+          'bg-transparent border border-white/20 hover:bg-white/10 text-white',
+        themedGhost: 'bg-transparent hover:bg-white/10 text-white',
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',
-        sm: 'h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5',
-        lg: 'h-10 rounded-md px-6 has-[>svg]:px-4',
+        sm: 'h-8 gap-1.5 px-3 has-[>svg]:px-2.5',
+        lg: 'h-10 px-6 has-[>svg]:px-4',
         icon: 'size-9',
+        md: 'py-3 px-6 text-base',
       },
     },
     defaultVariants: {
@@ -35,21 +42,92 @@ const buttonVariants = cva(
   }
 );
 
-const Button = React.forwardRef<
-  HTMLButtonElement,
-  React.ComponentProps<'button'> &
-    VariantProps<typeof buttonVariants> & { asChild?: boolean }
->(({ className, variant, size, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : 'button';
-  return (
-    <Comp
-      ref={ref}
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  );
-});
+interface ButtonProps
+  extends React.ComponentProps<'button'>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+  isLoading?: boolean;
+  fullWidth?: boolean;
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      isLoading = false,
+      fullWidth = false,
+      children,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    const { currentTheme } = useTheme();
+    const Comp = asChild ? Slot : 'button';
+
+    const getThemedVariantClasses = () => {
+      if (
+        !variant ||
+        ![
+          'primary',
+          'themedSecondary',
+          'themedOutline',
+          'themedGhost',
+        ].includes(variant)
+      ) {
+        return '';
+      }
+
+      switch (variant) {
+        case 'primary':
+          return `${currentTheme.colors.primary}`;
+        case 'themedSecondary':
+          return `${currentTheme.colors.secondary}`;
+        case 'themedOutline':
+        case 'themedGhost':
+          return '';
+        default:
+          return '';
+      }
+    };
+
+    const getCustomSizeClasses = () => {
+      if (size === 'md') {
+        return 'py-3 px-6 text-base';
+      }
+      return '';
+    };
+
+    return (
+      <Comp
+        ref={ref}
+        data-slot="button"
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          getThemedVariantClasses(),
+          getCustomSizeClasses(),
+          fullWidth && 'w-full',
+          'font-semibold button-hover shadow-lg theme-transition-colors',
+          disabled && 'disabled:opacity-50 disabled:cursor-not-allowed'
+        )}
+        disabled={isLoading || disabled}
+        {...props}
+      >
+        {isLoading ? (
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-white/20 border-t-white animate-spin" />
+            <span>Loading...</span>
+          </div>
+        ) : (
+          children
+        )}
+      </Comp>
+    );
+  }
+);
 
 Button.displayName = 'Button';
 
