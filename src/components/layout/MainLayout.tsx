@@ -78,6 +78,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <SidebarContent className="min-h-screen w-full relative overflow-hidden">
         <LeftDecor className="w-[85px] h-[136px] absolute top-32 left-0" />
         <RightDecor className="w-[97px] h-[89px] absolute top-0 right-0" />
+        <LeftDecor className="w-[85px] h-[136px] bottom-0 left-0 absolute" />
         {children}
       </SidebarContent>
     </SidebarProvider>
