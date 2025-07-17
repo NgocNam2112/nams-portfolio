@@ -1,0 +1,24 @@
+@keyframes fillLoop {
+  0%,
+  100% {
+    fill: transparent;
+  }
+  50% {
+    fill: black;
+  }
+}
+
+.elem1,
+.elem2,
+.elem3 {
+  fill: transparent;
+  animation: fillLoop 2.4s cubic-bezier(0.47, 0, 0.745, 0.715) infinite alternate;
+}
+
+.elem2 {
+  animation-delay: 0.3s;
+}
+
+.elem3 {
+  animation-delay: 0.6s;
+}

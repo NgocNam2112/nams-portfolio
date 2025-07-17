@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spaceGrotesk.variable} antialiased`}>
+      <body className={`${spaceGrotesk.variable} antialiased`} suppressHydrationWarning={true}>
         <MainLayout>{children}</MainLayout>
       </body>
     </html>

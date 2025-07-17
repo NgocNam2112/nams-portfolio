@@ -1,0 +1,59 @@
+.svg {
+  width: 77px;
+  height: 90px;
+}
+
+.elem1,
+.elem2,
+.elem3 {
+  fill: transparent;
+  animation-timing-function: cubic-bezier(0.47, 0, 0.745, 0.715);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-fill-mode: both;
+}
+
+.elem1 {
+  animation-name: fillAnim1;
+  animation-duration: 1.6s;
+  animation-delay: 0s;
+}
+
+.elem2 {
+  animation-name: fillAnim2;
+  animation-duration: 1.8s;
+  animation-delay: 0.2s;
+}
+
+.elem3 {
+  animation-name: fillAnim3;
+  animation-duration: 2s;
+  animation-delay: 0.4s;
+}
+
+@keyframes fillAnim1 {
+  0% {
+    fill: transparent;
+  }
+  100% {
+    fill: black;
+  }
+}
+
+@keyframes fillAnim2 {
+  0% {
+    fill: transparent;
+  }
+  100% {
+    fill: black;
+  }
+}
+
+@keyframes fillAnim3 {
+  0% {
+    fill: transparent;
+  }
+  100% {
+    fill: black;
+  }
+}
