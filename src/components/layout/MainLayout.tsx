@@ -44,7 +44,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
 
   const navigation: NavigationItem[] = [
     { title: 'Home', url: '/', isActive: pathname === '/' },
-    { title: 'Skills', url: '/skills', isActive: pathname === '/skills' },
+    { title: 'Experience', url: '/experience', isActive: pathname === '/experience' },
     { title: 'Projects', url: '/projects', isActive: pathname === '/projects' },
     { title: 'Education', url: '/education', isActive: pathname === '/education' },
     { title: 'Contact', url: '/contact', isActive: pathname === '/contact' },
@@ -75,11 +75,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           </SidebarMenu>
         </SidebarHeader>
       </Sidebar>
-      <SidebarContent className="min-h-screen w-full relative overflow-hidden">
+      <SidebarContent className="h-screen flex flex-col relative">
         <LeftDecor className="w-[85px] h-[136px] absolute top-32 left-0" />
         <RightDecor className="w-[97px] h-[89px] absolute top-0 right-0" />
         <LeftDecor className="w-[85px] h-[136px] bottom-0 left-0 absolute" />
-        {children}
+        <div className="flex-1 flex flex-col overflow-hidden">{children}</div>
       </SidebarContent>
     </SidebarProvider>
   );

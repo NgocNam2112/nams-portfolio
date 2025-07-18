@@ -12,7 +12,7 @@ import { HOME_PAGE_ANIMATION_VARIANTS } from '../constant';
 const HomeComponent = () => {
   return (
     <motion.div
-      className="h-full relative px-28 flex items-center justify-center gap-10"
+      className="h-full px-28 flex items-center justify-center gap-10"
       variants={HOME_PAGE_ANIMATION_VARIANTS.container}
       initial="hidden"
       animate="visible"
