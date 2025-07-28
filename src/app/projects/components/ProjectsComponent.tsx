@@ -1,17 +1,17 @@
-import ProjectCard from '@/components/common/ProjectCard';
+import ProjectCard from '@/app/projects/components/ProjectCard';
 import Image from 'next/image';
 import React from 'react';
-import { TESTIMONIALS } from '../constant';
 import TestimonialCard from '@/components/common/TestimonialCard';
 import { SvgNew, SvgPortfolio } from '@/components/icons';
+import { TESTIMONIALS } from '../constant';
 
-const Projects = () => {
+const ProjectsComponent = () => {
   return (
     <>
       <div className="px-28 mt-12">
         <div className="flex items-center justify-center gap-6">
           <div className="relative w-fit">
-            <h1 className="font-heading text-8xl">My Portfolio</h1>
+            <h1 className="font-heading text-8xl">My Projects</h1>
             <Image
               src="/images/portfolio-underline.png"
               alt="portfolio-underline"
@@ -23,7 +23,7 @@ const Projects = () => {
           <SvgPortfolio className="flex-shrink-0" />
         </div>
 
-        <div className="mt-14 grid grid-cols-2 gap-2">
+        <div className="mt-14 grid grid-cols-2 gap-10">
           <ProjectCard
             imageUrl="/images/projects/endeverus.png"
             title="Endeverus"
@@ -57,4 +57,4 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+export default ProjectsComponent;

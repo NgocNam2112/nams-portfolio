@@ -28,7 +28,7 @@ export function AnimatedHighlightText({
           exit={{ opacity: 0, y: 40 }}
           transition={{ duration: 0.5 }}
         >
-          <HighlightedText>{words[index]}</HighlightedText>
+          <HighlightedText className="2xl:text-7xl text-5xl">{words[index]}</HighlightedText>
         </motion.p>
       </AnimatePresence>
     </div>

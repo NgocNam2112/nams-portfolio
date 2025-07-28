@@ -71,7 +71,7 @@ const ExperienceComponent = () => {
   }) => {
     return (
       <motion.div
-        className="flex flex-col gap-4 p-4 border-b-2 h-1/2 cursor-pointer group"
+        className="flex flex-col gap-4 p-4 h-1/2 cursor-pointer group"
         variants={EXPERIENCE_VARIANTS_ANIMATION.item}
         whileHover={{
           scale: 1.02,
@@ -128,7 +128,6 @@ const ExperienceComponent = () => {
             <p className="text-4xl font-medium">Services I provide that deliver results</p>
             <motion.div
               whileHover={{
-                rotate: 360,
                 scale: 1.1,
                 transition: { duration: 0.6 },
               }}
@@ -184,18 +183,18 @@ const ExperienceComponent = () => {
         </motion.div>
 
         <motion.div
-          className="flex flex-col border-t-2 border-l-2"
+          className="flex flex-col border-t-2 border-l-2 border-b-2"
           variants={EXPERIENCE_VARIANTS_ANIMATION.container}
         >
-          {renderSkill(SKILLS.api_architecture)}
+          <div className="border-b-2 h-1/2">{renderSkill(SKILLS.api_architecture)}</div>
           {renderSkill(SKILLS.backend_development)}
         </motion.div>
 
         <motion.div
-          className="border-t-2 border-l-2"
+          className="border-t-2 border-l-2 border-b-2"
           variants={EXPERIENCE_VARIANTS_ANIMATION.container}
         >
-          {renderSkill(SKILLS.ui_development)}
+          <div className="border-b-2 h-1/2">{renderSkill(SKILLS.ui_development)}</div>
           {renderSkill(SKILLS.prototyping_and_mvp)}
         </motion.div>
       </motion.div>
