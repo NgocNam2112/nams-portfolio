@@ -1,11 +1,18 @@
+'use client';
+
 import ProjectCard from '@/app/projects/components/ProjectCard';
 import Image from 'next/image';
 import React from 'react';
-import TestimonialCard from '@/components/common/TestimonialCard';
-import { SvgNew, SvgPortfolio } from '@/components/icons';
-import { TESTIMONIALS } from '../constant';
+import { SvgPortfolio } from '@/components/icons';
+import { useProjects } from '../hooks/useProjectService';
 
 const ProjectsComponent = () => {
+  const { data, isLoading, error } = useProjects();
+
+  console.log('data', data);
+  console.log('isLoading', isLoading);
+  console.log('error', error);
+
   return (
     <>
       <div className="px-28 mt-12">
@@ -36,21 +43,6 @@ const ProjectsComponent = () => {
             description="UI design - User research - webflow develop"
             link="https://app.endeverus.com/"
           />
-        </div>
-      </div>
-
-      <div className="px-28 mt-12">
-        <div className="w-1/2 flex items-center gap-4">
-          <p className="text-4xl font-medium">Here’s what my clients are saying about my work</p>
-          <SvgNew className="flex-shrink-0" />
-        </div>
-
-        <div className="mt-40 pb-20">
-          <div className="grid grid-cols-2">
-            {TESTIMONIALS.map((testimonial, index) => (
-              <TestimonialCard key={index} {...testimonial} />
-            ))}
-          </div>
         </div>
       </div>
     </>

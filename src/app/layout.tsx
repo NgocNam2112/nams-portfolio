@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import MainLayout from '@/components/layout/MainLayout';
+import QueryProvider from '@/components/providers/QueryProvider';
 
 const spaceGrotesk = Space_Grotesk({
   variable: '--font-space-grotesk',
@@ -21,8 +22,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spaceGrotesk.variable} antialiased`} suppressHydrationWarning={true}>
-        <MainLayout>{children}</MainLayout>
+      <body
+        className={`${spaceGrotesk.variable} antialiased`}
+        style={{
+          backgroundImage:
+            'linear-gradient(#e5e7eb 1px, #0000 0), linear-gradient(90deg, #e5e7eb 1px, #0000 0)',
+          backgroundSize: '100px 100px',
+        }}
+        suppressHydrationWarning={true}
+      >
+        <QueryProvider>
+          <MainLayout>{children}</MainLayout>
+        </QueryProvider>
       </body>
     </html>
   );
